@@ -11,6 +11,13 @@ import ContactsPage from './pages/ContactsPage.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
 import RestrictedRoute from './routes/RestrictedRoute.jsx';
 import { refreshUser } from './redux/auth/operations';
+import { Toaster } from 'react-hot-toast';
+
+
+
+// Email: dana.cool@example.com
+// Пароль: DanaPass#2025
+
 
 function App() {
   const dispatch = useDispatch();
@@ -27,6 +34,8 @@ function App() {
   }, [dispatch, isLoggedIn]);
 
   return (
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
@@ -56,6 +65,7 @@ function App() {
         />
       </Route>
     </Routes>
+    </>
   );
 }
 

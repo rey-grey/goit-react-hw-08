@@ -68,9 +68,11 @@ export const { clearContacts } = contactsSlice.actions;
 export const selectFilteredContacts = createSelector(
   [selectContacts, (state) => state.filters.name || ''],
   (contacts, filter) => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contact => 
-      contact.name.toLowerCase().includes(normalizedFilter)
+    const normalizedFilter = filter.toLowerCase().trim();
+
+    return contacts.filter(({ name, number }) =>
+      name.toLowerCase().includes(normalizedFilter) ||
+      String(number).toLowerCase().includes(normalizedFilter)
     );
   }
 );

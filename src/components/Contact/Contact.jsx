@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import Contact from '../Contact/Contact'; // Можно заменить, если хочешь переделать кнопку удаления
+
 import { selectFilteredContacts, selectLoading, selectError } from '../../redux/contacts/slice';
 
 import List from '@mui/material/List';
@@ -28,9 +28,6 @@ const ContactList = () => {
 
   return (
     <div>
-      {isLoading && <p>Loading contacts...</p>}
-      {error && <p>Error: {error}</p>}
-
       {!isLoading && !error && (
         <List sx={{ maxWidth: 400, margin: '0 auto', p: 0 }}>
           {filteredContacts.map(({ id, name, number }) => (

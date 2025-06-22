@@ -1,16 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 axios.defaults.baseURL = 'https://connections-api.goit.global';
-
 
 const setAuthHeader = (token) => {
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
-
-// const clearAuthHeader = () => {
-//   delete axios.defaults.headers.common.Authorization;
-// };
 
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchAll',
@@ -18,7 +14,7 @@ export const fetchContacts = createAsyncThunk(
     try {
       const { auth } = thunkAPI.getState();
       if (!auth.token) throw new Error('No token');
-      
+
       setAuthHeader(auth.token);
       const { data } = await axios.get('/contacts');
       return data;
@@ -26,6 +22,7 @@ export const fetchContacts = createAsyncThunk(
       if (error.response?.status === 401) {
         thunkAPI.dispatch({ type: 'auth/logout' });
       }
+      toast.error(`Failed to fetch contacts: ${error.message}`);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -37,11 +34,13 @@ export const addContact = createAsyncThunk(
     try {
       const { auth } = thunkAPI.getState();
       if (!auth.token) throw new Error('No token');
-      
+
       setAuthHeader(auth.token);
       const { data } = await axios.post('/contacts', contactData);
+      toast.success(`Contact "${contactData.name}" added successfully! 🎉`);
       return data;
     } catch (error) {
+      toast.error(`Failed to add contact: ${error.message}`);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -53,11 +52,13 @@ export const deleteContact = createAsyncThunk(
     try {
       const { auth } = thunkAPI.getState();
       if (!auth.token) throw new Error('No token');
-      
+
       setAuthHeader(auth.token);
       await axios.delete(`/contacts/${contactId}`);
+      toast.success('Contact deleted successfully! 👌');
       return contactId;
     } catch (error) {
+      toast.error(`Failed to delete contact: ${error.message}`);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -69,11 +70,13 @@ export const updateContact = createAsyncThunk(
     try {
       const { auth } = thunkAPI.getState();
       if (!auth.token) throw new Error('No token');
-      
+
       setAuthHeader(auth.token);
       const { data } = await axios.patch(`/contacts/${contactId}`, updates);
+      toast.success('Contact updated successfully!');
       return data;
     } catch (error) {
+      toast.error(`Failed to update contact: ${error.message}`);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
